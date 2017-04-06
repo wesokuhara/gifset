@@ -9,16 +9,17 @@
 
     <!-- CSS -->
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
     <link href="assets/css/styles.css" rel="stylesheet" type="text/css">
   </head>
 
   <body>
     <div class="container text-center">
-      <div id="jumbotron">
+      <div class="jumbotron">
         <h1>GIF SET</h1>
         <div class="search-container">
           <form id="searchForm">
-            <input id="searchInput" class="search-input" type="text" placeholder="Search GIFs by keyword">
+            <input id="searchInput" class="search-input" type="text" placeholder="Search GIFs">
             <input id="searchBtn" class="search-btn" type="submit" value="">
           </form>
         </div>
@@ -26,14 +27,14 @@
 
       <div class="results-container">
         <div id="gallery">
-          <h3 class="font-weight-light">TRENDING:</h3>
+          <h4 class="font-weight-light">TRENDING:</h4>
         </div>
         <div id="loadMore" class="hidden">
           <input id="loadMoreBtn" class="load-more-btn" type="button" value="Load More">
         </div>
       </div>
 
-      <div id="lightboxOverlay" class="lightbox-overlay hidden">
+      <div id="lightboxOverlay" class="lightbox-overlay">
         <div id="lightboxContent" class="lightbox-content"></div>
         <span id="lightboxClose" class="lightbox-close">&times;</span>
         <span id="lightboxPrev" class="lightbox-prev">&#10094;</span>

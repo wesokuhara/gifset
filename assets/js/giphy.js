@@ -94,7 +94,7 @@ let Giphy = (function () {
 
       let img = document.createElement('img');
       img.src = gifs[i].images.fixed_width.url;
-      img.className = 'thumbnail';
+      img.className = 'gif';
       img.setAttribute('data-img-index', data.imageCount++);
       img.addEventListener('click', focusLightbox);
 
