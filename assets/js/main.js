@@ -1,14 +1,15 @@
 /* global Giphy Utils */
 
-window.onload = function () {
+window.onload = function() {
   Giphy.init({
-    apiKey: 'dc6zaTOxFJmzC'
+    apiKey: 'dc6zaTOxFJmzC',
+    searchLimit: 20
   });
 
   Giphy.getTrending();
 
   var searchForm = document.getElementById('searchForm');
-  searchForm.addEventListener('submit', function (e) {
+  searchForm.addEventListener('submit', function(e) {
     e.preventDefault();
 
     var searchText = document.getElementById('searchInput').value.trim();
@@ -20,24 +21,24 @@ window.onload = function () {
   });
 
   var loadMoreBtn = document.getElementById('loadMoreBtn');
-  loadMoreBtn.addEventListener('click', function () {
+  loadMoreBtn.addEventListener('click', function() {
     this.blur();
-    // Giphy.loadMore();
+    Giphy.loadMore();
   });
 
   var lightboxClose = document.getElementById('lightboxClose');
-  lightboxClose.addEventListener('click', function () {
+  lightboxClose.addEventListener('click', function() {
     Utils.hideElementById('lightboxOverlay');
   });
 
   var lightboxPrev = document.getElementById('lightboxPrev');
-  lightboxPrev.addEventListener('click', function () {
+  lightboxPrev.addEventListener('click', function() {
     this.blur();
     Giphy.prevGif();
   });
 
   var lightboxNext = document.getElementById('lightboxNext');
-  lightboxNext.addEventListener('click', function () {
+  lightboxNext.addEventListener('click', function() {
     this.blur();
     Giphy.nextGif();
   });

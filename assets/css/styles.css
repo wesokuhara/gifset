@@ -182,10 +182,6 @@ body {
 
 /********* Desktop Styles *******/
 @media (min-width: 768px) {
-  .tile {
-    margin: 15px;
-  }
-
   .lightbox-prev, .lightbox-next {
     padding: 20px;
     font-size: 3rem;

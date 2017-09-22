@@ -1,15 +1,14 @@
 /* global Utils */
 
-var Giphy = (function () {
+var Giphy = (function() {
   var config = {};
   var data = {};
 
-  function init (options) {
-    options = options || {};
-    config.apiKey = options.apiKey;
+  function init(options) {
+    config = options || {};
   }
 
-  function resetData () {
+  function resetData() {
     data = {
       gifs: [],
       offset: 0,
@@ -19,7 +18,7 @@ var Giphy = (function () {
     };
   }
 
-  function buildLightbox () {
+  function buildLightbox() {
     var gif = data.gifs[data.lightboxIndex];
 
     // Hide the prev button if this is the first GIF
@@ -54,23 +53,24 @@ var Giphy = (function () {
     Utils.showElementById('lightboxOverlay');
   }
 
-  function focusLightbox () {
+  function focusLightbox() {
     data.lightboxIndex = parseInt(this.getAttribute('data-img-index'));
     buildLightbox();
   }
 
-  function prevGif () {
+  function prevGif() {
     data.lightboxIndex--;
     buildLightbox();
   }
 
-  function nextGif () {
+  function nextGif() {
     data.lightboxIndex++;
     buildLightbox();
   }
 
-  function buildGallery (gifs) {
+  function buildGallery(gifs) {
     data.gifs = data.gifs.concat(gifs);
+    data.offset += gifs.length;
 
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < gifs.length; i++) {
@@ -90,7 +90,7 @@ var Giphy = (function () {
     Utils.appendElementById('gallery', fragment);
   }
 
-  function search (searchText) {
+  function search(searchText) {
     resetData();
     data.recentSearch = searchText;
     Utils.clearElementById('gallery');
@@ -99,31 +99,53 @@ var Giphy = (function () {
     var url = Utils.buildUrl('https://api.giphy.com/v1/gifs/search', {
       api_key: config.apiKey,
       q: searchText,
-      limit: 16,
-      offset: 0,
+      limit: config.searchLimit,
+      offset: data.offset,
       fmt: 'json'
     });
 
     Utils.fetch('GET', url)
-      .then(function (res) {
+      .then(function(res) {
         buildGallery(res.data);
-        // TODO Utils.showElementById('loadMoreBtn');
+        if (res.data.length === config.searchLimit) {
+          Utils.showElementById('loadMoreBtn');
+        }
+        console.log(data);
       })
       .catch(console.log);
   }
 
-  function getTrending () {
+  function getTrending() {
     resetData();
 
     var url = Utils.buildUrl('https://api.giphy.com/v1/gifs/trending', {
       api_key: config.apiKey,
-      limit: 16,
+      limit: 25,
       fmt: 'json'
     });
 
     Utils.fetch('GET', url)
-      .then(function (res) {
+      .then(function(res) {
         buildGallery(res.data);
+      })
+      .catch(console.log);
+  }
+
+  function loadMore() {
+    var url = Utils.buildUrl('https://api.giphy.com/v1/gifs/search', {
+      api_key: config.apiKey,
+      q: data.recentSearch,
+      limit: config.searchLimit,
+      offset: data.offset,
+      fmt: 'json'
+    });
+
+    Utils.fetch('GET', url)
+      .then(function(res) {
+        buildGallery(res.data);
+        if (res.data.length === config.searchLimit) {
+          Utils.showElementById('loadMoreBtn');
+        }
       })
       .catch(console.log);
   }
@@ -133,6 +155,7 @@ var Giphy = (function () {
     prevGif,
     nextGif,
     search,
-    getTrending
+    getTrending,
+    loadMore
   };
 })();
