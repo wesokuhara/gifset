@@ -1,16 +1,10 @@
-let Util = (function () {
-  /**
-   * Determine if the device is mobile
-   */
+var Utils = (function () {
   function isMobileDevice () {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
   }
 
-  /**
-   * Helper function to extend an object
-   */
   function extend (obj, src) {
-    for (let key in src) {
+    for (var key in src) {
       if (src.hasOwnProperty(key)) {
         obj[key] = src[key];
       }
@@ -18,23 +12,18 @@ let Util = (function () {
     return obj;
   }
 
-  /**
-   * Build a URL given a base endpoint and parameters
-   */
   function buildUrl (base, params) {
-    let query = '';
-    for (let prop in params) {
+    var query = '';
+    for (var prop in params) {
       query += '&' + encodeURIComponent(prop) + '=' + encodeURIComponent(params[prop]);
     }
     return base + '?' + query;
   }
 
-  /**
-   * Fetch a resource given a base URL and options
-   */
-  function fetch (method, url, data = '') {
+  function fetch (method, url, data) {
+    data = data || '';
     return new Promise(function (resolve, reject) {
-      let req = new XMLHttpRequest();
+      var req = new XMLHttpRequest();
       req.open(method, url);
 
       req.onload = function () {
@@ -53,41 +42,27 @@ let Util = (function () {
     });
   }
 
-  /**
-   * Clear all contents of an element given its ID
-   */
   function clearElementById (id) {
-    let el = document.getElementById(id);
+    var el = document.getElementById(id);
     while (el.hasChildNodes()) {
       el.removeChild(el.firstChild);
     }
   }
 
-  /**
-   * Append a fragment to an element given its ID
-   */
   function appendElementById (id, fragment) {
     document.getElementById(id).appendChild(fragment);
   }
 
-  /**
-   * Replace the contents of an element with the fragment
-   */
   function replaceElementContentsById (id, fragment) {
     clearElementById(id);
     appendElementById(id, fragment);
   }
 
-  /**
-   * Hide an element given its ID
-   */
+
   function hideElementById (id) {
     document.getElementById(id).style.display = 'none';
   }
 
-  /**
-   * Show an element given its ID
-   */
   function showElementById (id) {
     document.getElementById(id).style.display = 'block';
   }

@@ -1,4 +1,4 @@
-# GIFSET
+# gifset
 
 ### A project by [Wes Okuhara](https://wesokuhara.github.io).
 

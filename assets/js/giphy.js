@@ -1,21 +1,14 @@
-/* globals Util */
+/* global Utils */
 
-let Giphy = (function () {
-  let config = {};
-  let data = {};
+var Giphy = (function () {
+  var config = {};
+  var data = {};
 
-  /**
-   * Initialize with options
-   */
   function init (options) {
-    console.log('Giphy API initialized!');
     options = options || {};
     config.apiKey = options.apiKey;
   }
 
-  /**
-   * Reset data cache
-   */
   function resetData () {
     data = {
       gifs: [],
@@ -26,73 +19,65 @@ let Giphy = (function () {
     };
   }
 
-  /**
-   * Build and show the lightbox
-   */
   function buildLightbox () {
-    let gif = data.gifs[data.lightboxIndex];
+    var gif = data.gifs[data.lightboxIndex];
 
     // Hide the prev button if this is the first GIF
     if (data.lightboxIndex === 0) {
-      Util.hideElementById('lightboxPrev');
+      Utils.hideElementById('lightboxPrev');
     } else {
-      Util.showElementById('lightboxPrev');
+      Utils.showElementById('lightboxPrev');
     }
 
     // Hide the next button if this is the last GIF
     if (data.lightboxIndex === data.gifs.length - 1) {
-      Util.hideElementById('lightboxNext');
+      Utils.hideElementById('lightboxNext');
     } else {
-      Util.showElementById('lightboxNext');
+      Utils.showElementById('lightboxNext');
     }
 
-    let img = document.createElement('img');
+    var img = document.createElement('img');
     img.src = gif.images.original.url;
     img.className = 'lightbox-img';
 
-    let fragment = document.createDocumentFragment();
-    fragment.appendChild(img);
+    var description = document.createElement('h2');
+    var externalLink = document.createElement('a');
+    externalLink.className = 'fa fa-external-link lightbox-link';
+    externalLink.href = gif.bitly_url;
+    description.appendChild(externalLink);
 
-    Util.replaceElementContentsById('lightboxContent', fragment);
-    Util.showElementById('lightboxOverlay');
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(img);
+    fragment.appendChild(description);
+
+    Utils.replaceElementContentsById('lightboxContent', fragment);
+    Utils.showElementById('lightboxOverlay');
   }
 
-  /**
-   * Trigger the lightbox when a GIF thumbnail is clicked
-   */
   function focusLightbox () {
     data.lightboxIndex = parseInt(this.getAttribute('data-img-index'));
     buildLightbox();
   }
 
-  /**
-   * Show the next GIF in the lightbox
-   */
   function prevGif () {
     data.lightboxIndex--;
     buildLightbox();
   }
 
-  /**
-   * Show the previous GIF in the lightbox
-   */
   function nextGif () {
     data.lightboxIndex++;
     buildLightbox();
   }
 
-  /**
-   * Display the set of GIFs
-   */
   function buildGallery (gifs) {
     data.gifs = data.gifs.concat(gifs);
 
-    let fragment = document.createDocumentFragment();
-    for (let i = 0; i < gifs.length; i++) {
-      let div = document.createElement('div');
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < gifs.length; i++) {
+      var div = document.createElement('div');
       div.className = 'tile';
 
-      let img = document.createElement('img');
+      var img = document.createElement('img');
       img.src = gifs[i].images.fixed_width.url;
       img.className = 'gif';
       img.setAttribute('data-img-index', data.imageCount++);
@@ -102,20 +87,16 @@ let Giphy = (function () {
       fragment.appendChild(div);
     }
 
-    Util.appendElementById('gallery', fragment);
-    Util.showElementById('gallery');
+    Utils.appendElementById('gallery', fragment);
   }
 
-  /**
-   * Search for GIFs
-   */
   function search (searchText) {
     resetData();
     data.recentSearch = searchText;
-    Util.clearElementById('gallery');
-    Util.hideElementById('loadMore');
+    Utils.clearElementById('gallery');
+    Utils.hideElementById('loadMoreBtn');
 
-    let url = Util.buildUrl('https://api.giphy.com/v1/gifs/search', {
+    var url = Utils.buildUrl('https://api.giphy.com/v1/gifs/search', {
       api_key: config.apiKey,
       q: searchText,
       limit: 16,
@@ -123,34 +104,28 @@ let Giphy = (function () {
       fmt: 'json'
     });
 
-    Util.fetch('GET', url)
+    Utils.fetch('GET', url)
       .then(function (res) {
         buildGallery(res.data);
+        // TODO Utils.showElementById('loadMoreBtn');
       })
-      .catch(function (err) {
-        console.log(err);
-      });
+      .catch(console.log);
   }
 
-  /**
-   * Get trending GIFs
-   */
   function getTrending () {
     resetData();
 
-    let url = Util.buildUrl('https://api.giphy.com/v1/gifs/trending', {
+    var url = Utils.buildUrl('https://api.giphy.com/v1/gifs/trending', {
       api_key: config.apiKey,
       limit: 16,
       fmt: 'json'
     });
 
-    Util.fetch('GET', url)
+    Utils.fetch('GET', url)
       .then(function (res) {
         buildGallery(res.data);
       })
-      .catch(function (err) {
-        console.log(err);
-      });
+      .catch(console.log);
   }
 
   return {
